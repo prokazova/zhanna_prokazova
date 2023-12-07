@@ -1,0 +1,233 @@
+openapi: 3.0.0
+info:
+  title: Подача заявки на стажировку
+  version: 1.0.0
+tags:
+  - name: Подача заявки
+    description: API подачи заявки
+paths:
+  /list-traineeships:
+    get:
+      tags:
+        - Подача заявки
+      summary: Получение информации о списке стажировок
+      responses:
+        '200':
+          description: Список стажировок
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListTraineeships'
+  /traineeship/{id_traineeship}:
+    get:
+      tags:
+        - Подача заявки
+      summary: Получение информации о стажировке
+      parameters:
+        - name: id_traineeship
+          in: path
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Стажировка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InfoTraineeship'
+  /list-fields/{id_traineeship}:
+    get:
+      tags:
+        - Подача заявки
+      summary: Получение актуальных полей для формы подачи заявки
+      parameters:
+        - name: id_traineeship
+          in: path
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Стажировка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fields'
+  /candidate-data:
+    post:
+      tags:
+        - Подача заявки
+      summary: Отправка полной информации о кандидате
+      requestBody:
+        description: Создание заявки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CandidateData'
+        required: true
+      responses:
+        '200':
+          description: Заявка успешно отправлена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '405':
+          description: Внутренняя ошибка сервера
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    ListTraineeship:
+      type: object
+      properties:
+        name_traineeship:
+          type: string
+          description: Название стажировки
+        date_start:
+          type: string
+          description: Дата начала
+        date_end:
+          type: string
+          description: Дата окончания
+        term:
+          type: string
+          description: Срок подачи
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    ListTraineeships:
+      type: object
+      properties:
+        traineeships: 
+          type: array
+          items:
+            $ref: '#/components/schemas/ListTraineeship'
+    InfoTraineeship:
+      type: object
+      properties:
+        name_traineeship:
+          type: string
+          description: Название стажировки
+        content_traineeship:
+          type: string
+          description: Содержание стажировки
+        date_start:
+          type: string
+          description: Дата начала
+        date_end:
+          type: string
+          description: Дата окончания
+        requirement:
+          type: string
+          description: Требования к кандидату
+        term:
+          type: string
+          description: Срок подачи
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    CandidateData:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        birthdate:
+          type: string
+          description: Дата рождения
+        phone_number:
+          type: string
+          description: Номер телефона
+        email:
+          type: string
+          description: Почта
+        citizenship:
+          type: string
+          description: Гражданство
+        city:
+          type: string
+          description: Город
+        address:
+          type: string
+          description: Прописка
+        level_education:
+          type: string
+          description: Уровень образования
+        name_institution:
+          type: string
+          description: Название учебного заведения
+        specialization:
+          type: string
+          description: Специальность
+        year_graduation:
+          type: integer
+          description: Год окончания
+        social_status:
+          type: string
+          description: Социальный статус
+        working_time:
+          type: string
+          description: Готов уделять работе
+        question:
+          type: string
+          description: Вопрос
+        response_test:
+          type: string
+          description: Ответ на входное тестирование
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    Status:
+      type: object
+      properties:
+        status:
+          type: boolean
+    Field:
+      type: object
+      properties:
+        name_field:
+          type: string
+          description: Название поля
+        mandatory:
+          type: boolean
+          description: Обязательность
+        field_property:
+          type: string
+          description: Свойство поля
+        number:
+          type: integer
+          description: Номер
+        value:
+          type: string
+          description: Значение
+        id_field:
+          type: integer
+          description: ID поля
+    Fields:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        link_testing:
+          type: string
+        id_traineeship:
+          type: integer
