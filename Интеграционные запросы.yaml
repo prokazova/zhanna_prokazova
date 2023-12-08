@@ -1,0 +1,225 @@
+openapi: 3.0.0
+info:
+  title: Интеграционные запросы
+  version: 1.0.0
+tags:
+  - name: Интеграционные запросы
+    description: API интеграционных запросов
+paths:
+  /access_security:
+    post:
+      tags:
+        - Интеграционные запросы
+      summary: Проверка кандидата в службе безопасности
+      security:
+        - Authorization: []
+      requestBody:
+        description: Отправка данных стажёра в службу безопасности
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate'
+        required: true
+      responses:
+        '200':
+          description: Данные отравлены в службу безопасности
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+  /liga-security-responses:
+    patch:
+      tags:
+        - Интеграционные запросы
+      summary: Получение ответа от службы безопасности
+      security:
+        - Authorization: []
+      requestBody:
+        description: Получение данных о стажёре из службы безопасности
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Security'
+        required: true
+      responses:
+        '200':
+          description: Ответ от службы безопасности
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера        
+  /update-employee:
+    patch:
+      tags:
+        - Интеграционные запросы
+      summary: Получение новых сотрудников в БД Сотрудники
+      security:
+        - Authorization: []
+      requestBody:
+        description: Получение cписка сотрудников
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Traineeship'
+        required: true
+      responses:
+        '200':
+          description: Сотрудники
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Employees'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+  /employees-request:
+    patch:
+      tags:
+        - Интеграционные запросы
+      summary: Прием заявок по кандидатам на трудоустройство в HR подразделении
+      security:
+        - Authorization: []
+      requestBody:
+        description: Отправка данных стажёра в HR
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Employees2'
+        required: true
+      responses:
+        '200':
+          description: Данные отправлны в HR
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Status:
+      type: object
+      properties:
+        status:
+          type: boolean
+    Traineeship:
+      type: object
+      properties:
+        id_traineeship:
+          type: integer
+    Employee:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        post:
+          type: string
+          description: Должность
+        id_employee:
+          type: integer
+          description: ID сотрудника
+    Employees:
+      type: object
+      properties:
+        employee:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee'
+        id_traineeship:
+          type: integer
+    Candidate:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID стажёра
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+        type:
+          type: string
+          description: intern
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        birthdate:
+          type: string
+          description: Дата рождения
+        address:
+          type: string
+          description: Прописка
+    Security:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID стажёра
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+        status:
+          type: string
+          description: Статус проверки
+        description:
+          type: string
+          description: Комментарий от службы безопасности
+    Employee2:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        phone_number:
+          type: string
+          description: Номер телефона
+        email:
+          type: string
+          description: Почта
+        birthdate:
+          type: string
+          description: Дата рождения
+        city:
+          type: string
+          description: Город
+    Employees2:
+      type: object
+      properties:
+        employee:
+          type: array
+          items:
+            $ref: '#/components/schemas/Employee2'
