@@ -1,0 +1,963 @@
+openapi: 3.0.0
+info:
+  title: Авторизованная зона
+  version: 1.0.0
+tags:
+  - name: Программа стажировки
+    description: API авторизованной зоны
+  - name: Домашнее задание
+    description: API авторизованной зоны
+  - name: Роли
+    description: API авторизованной зоны
+  - name: Стажёры
+    description: API авторизованной зоны
+  - name: Управление анонсами стажировок
+    description: API авторизованной зоны
+  - name: Форма подачи заявки
+    description: API авторизованной зоны
+paths:
+  /access-traineeship:
+    get:
+      tags:
+        - Программа стажировки
+      summary: Получение списка доступных стажировок  
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Список доступных стажировок
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Traineeships'
+  /schedule:
+    get:
+      tags:
+        - Программа стажировки
+      summary: Получение программы стажировки
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Стажировка
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Schedule2'
+  /update-schedule:
+    patch:
+      tags:
+        - Программа стажировки
+      summary: Добавление материалов лекции
+      security:
+        - Authorization: []
+      requestBody:
+        description: Добавление материалов лекции в программу стажировки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule4'
+        required: true
+      responses:
+        '200':
+          description: Добавлены материалы лекции
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+  /create-schedule:
+    post:
+      tags:
+        - Программа стажировки
+      summary: Cоздание (изменение) лекции
+      security:
+        - Authorization: []
+      requestBody:
+        description: Cоздание (изменение) лекции в программе стажировки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Schedule6'
+        required: true
+      responses:
+        '200':
+          description: Лекция успешно создана
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+  /list-homework:
+    get:
+      tags:
+        - Домашнее задание
+      summary: Получение списка домашних заданий
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Список домашних заданий
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Homework2'
+  /intern-homework:
+    get:
+      tags:
+        - Домашнее задание
+      summary: Получение домашнего задания от стажёров
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+        - name: id_homework
+          in: query
+          required: true
+          description: Идентификатор домашнего задания
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Домашние задания от стажёров
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InternHomework2'
+  /mark:
+    patch:
+      tags:
+        - Домашнее задание
+      summary: Изменение оценки/заметки/комментария/заключения от ментора
+      security:
+        - Authorization: []
+      requestBody:
+        description: Оценка/заметка/комментарий/заключение от ментора
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mark'
+        required: true
+      responses:
+        '200':
+          description: Выставлены оценка/заметка/комментарий/заключение от ментора
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера  
+  /done-homework:
+    post:
+      tags:
+        - Домашнее задание
+      summary: Сохранение выполненного домашнего задания
+      security:
+        - Authorization: []
+      requestBody:
+        description: Выполненное домашнее задание
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DoneHomework'
+        required: true
+      responses:
+        '200':
+          description: Выполненное домашнее задание успешно сохранено
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+  /update-homework:
+    patch:
+      tags:
+        - Домашнее задание
+      summary: Добавление материалов домашнего задания
+      security:
+        - Authorization: []
+      requestBody:
+        description: Материалы домашнего задания
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateHomework'
+        required: true
+      responses:
+        '200':
+          description: Материалы домашнего задания успешно добавлены
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера 
+  /list-intern:
+    get:
+      tags:
+        - Роли
+      summary: Получение информации и роли стажёров
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Получена информация и роль стажеров
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Intern2'
+  /list-employee:
+    get:
+      tags:
+        - Роли
+      summary: Получение сотрудников для назначения роли
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Получены сотрудники для назначения роли
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Mentor2'
+  /update-role:
+    patch:
+      tags:
+        - Роли
+      summary: Изменение роли
+      security:
+        - Authorization: []
+      requestBody:
+        description: Изменение роли
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+        required: true
+      responses:
+        '200':
+          description: Роль успешно изменена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера 
+  /list-candidate:
+    get:
+      tags:
+        - Стажёры
+      summary: Получение информации о кандидате и тестового задания
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Получена информация о кандидате и тестовое задание
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Candidate2'
+  /update-candidate:
+    patch:
+      tags:
+        - Стажёры
+      summary: Изменение статуса кандидата
+      security:
+        - Authorization: []
+      requestBody:
+        description: Изменение статуса кандидата
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Candidate4'
+        required: true
+      responses:
+        '200':
+          description: Статус успешно изменен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера 
+  /list-announcement:
+    get:
+      tags:
+        - Управление анонсами стажировок
+      summary: Получение анонсов
+      security:
+        - Authorization: []
+      responses:
+        '200':
+          description: Получены анонсы
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Announcement2'
+  /create-announcement:
+    post:
+      tags:
+        - Управление анонсами стажировок
+      summary: Создание (изменение) анонсов
+      security:
+        - Authorization: []
+      requestBody:
+        description: Анонс стажировки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Announcement4'
+        required: true
+      responses:
+        '200':
+          description: Анонс стажировки успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+  /list-fields:
+    get:
+      tags:
+        - Форма подачи заявки
+      summary: Получение полей для формы подачи заявки
+      security:
+        - Authorization: []
+      parameters:
+        - name: id_traineeship
+          in: query
+          required: true
+          description: Идентификатор стажировки
+          schema:
+            type: integer
+            default: null
+      responses:
+        '200':
+          description: Получены поля для формы подачи заявки
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fields'
+  /create-fields:
+    post:
+      tags:
+        - Форма подачи заявки
+      summary: Создание (изменение) полей для формы подачи заявки
+      security:
+        - Authorization: []
+      requestBody:
+        description: Поле формы подачи заявки
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Field3'
+        required: true
+      responses:
+        '200':
+          description: Поле формы подачи заявки успешно создано
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'          
+        '400':
+          description: Неверный запрос
+        '500':
+          description: Внутренняя ошибка сервера
+components:
+  securitySchemes:
+    Authorization:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Status:
+      type: object
+      properties:
+        status:
+          type: boolean
+    Candidate:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        emai:
+          type: string
+          description: Почта
+        link:
+          type: string
+          description: Ссылка с выполненным входным тестированием
+        mark:
+          type: integer
+          description: Оценка
+        conclusion:
+          type: string
+          description: Заключение
+        comment_security:
+          type: string
+          description: Комментарий от службы безопасности
+        status:
+          type: string
+          description: Статус
+        id_intern:
+          type: integer
+          description: ID стажёра
+    Candidate2:
+      type: object
+      properties:
+        candidate:
+          type: array
+          items:
+            $ref: '#/components/schemas/Candidate'
+        id_traineeship:
+          type: integer
+    Candidate3:
+      type: object
+      properties:
+        status:
+          type: string
+          description: Статус
+        id_intern:
+          type: integer
+          description: ID стажёра
+    Candidate4:
+      type: object
+      properties:
+        candidate:
+          type: array
+          items:
+            $ref: '#/components/schemas/Candidate3'
+        id_traineeship:
+          type: integer
+    Traineeship:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название стажировки
+        date_start:
+          type: string
+          description: Дата начала
+        date_end:
+          type: string
+          description: Дата окончания
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    Traineeships:
+      type: object
+      properties:
+        traineeships: 
+          type: array
+          items:
+            $ref: '#/components/schemas/Traineeship'
+    Schedule:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Дата
+        time:
+          type: string
+          description: Время
+        topic_lecture:
+          type: string
+          description: Тема лекции
+        mentor:
+          type: string
+          description: Ментор
+        link:
+          type: string
+          description: Ссылка для подключения к лекции
+        materials_lecture:
+          type: string
+          description: Материалы лекции
+        id_ lecture:
+          type: integer
+          description: ID лекции
+    Schedule2:
+      type: object
+      properties:
+        schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule'
+        id_traineeship:
+          type: integer
+    Schedule3:
+      type: object
+      properties:
+        materials_lecture:
+          type: string
+          description: Материалы лекции
+        id_ lecture:
+          type: integer
+          description: ID лекции
+    Schedule4:
+      type: object
+      properties:
+        schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule3'
+        id_traineeship:
+          type: integer
+    Schedule5:
+      type: object
+      properties:
+        date:
+          type: string
+          description: Дата
+        time:
+          type: string
+          description: Время
+        topic_lecture:
+          type: string
+          description: Тема лекции
+        mentor:
+          type: string
+          description: Ментор
+        link:
+          type: string
+          description: Ссылка для подключения
+    Schedule6:
+      type: object
+      properties:
+        schedule:
+          type: array
+          items:
+            $ref: '#/components/schemas/Schedule5'
+        id_traineeship:
+          type: integer
+    Homework:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название домашнего задания
+        link_mentor:
+          type: string
+          description: Ссылка с домашним заданием от ментора
+        link_intern:
+          type: string
+          description: Ссылка с выполненным домашним заданием от стажёра
+        mark:
+          type: integer
+          description: Оценка
+        comment:
+          type: string
+          description: Комментарий
+        mentor:
+          type: string
+          description: Ментор
+        term:
+          type: string
+          description: Срок выполнения
+        id_ homework:
+          type: integer
+          description: ID домашнего задания
+    Homework2:
+      type: object
+      properties:
+        homework:
+          type: array
+          items:
+            $ref: '#/components/schemas/Homework'
+        id_traineeship:
+          type: integer
+    InternHomework:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        link:
+          type: string
+          description: Ссылка с выполненным домашним заданием от стажёра
+        date:
+          type: string
+          description: Дата
+        mark:
+          type: integer
+          description: Оценка
+        note:
+          type: string
+          description: Заметка
+        comment:
+          type: string
+          description: Комментарий
+        conclusion:
+          type: string
+          description: Заключение
+        id_intern:
+          type: integer
+          description: ID стажёра
+    InternHomework2:
+      type: object
+      properties:
+        homework:
+          type: array
+          items:
+            $ref: '#/components/schemas/InternHomework'
+        id_traineeship:
+          type: integer
+        id_homework:
+          type: integer
+    Mark:
+      type: object
+      properties:
+        mark:
+          type: integer
+          description: Оценка
+        note:
+          type: string
+          description: Заметка
+        comment:
+          type: string
+          description: Комментарий
+        conclusion:
+          type: string
+          description: Заключение
+        id_intern:
+          type: integer
+          description: ID стажёра
+        id_homework:
+          type: integer
+          description: ID домашнего задания
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    DoneHomework:
+      type: object
+      properties:
+        link:
+          type: string
+          description: Ссылка с выполненным домашним заданием от стажёра
+        id_intern:
+          type: integer
+          description: ID стажёра
+        id_homework:
+          type: integer
+          description: ID домашнего задания
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    UpdateHomework:
+      type: object
+      properties:
+        term:
+          type: string
+          description: Срок выполнения
+        link:
+          type: string
+          description: Ссылка с домашним заданием от ментора
+        id_homework:
+          type: integer
+          description: ID домашнего задания
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    Intern:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        email:
+          type: string
+          description: Почта
+        role:
+          type: string
+          description: Роль
+        id_intern:
+          type: integer
+          description: ID стажёра
+    Intern2:
+      type: object
+      properties:
+        intern:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intern'
+        id_traineeship:
+          type: integer
+    Mentor:
+      type: object
+      properties:
+        first_name:
+          type: string
+          description: Имя
+        last_name:
+          type: string
+          description: Фамилия
+        middle_name:
+          type: string
+          description: Отчество
+        post:
+          type: string
+          description: Должность
+        role:
+          type: string
+          description: Роль
+        id_employee:
+          type: integer
+          description: ID сотрудника
+    Mentor2:
+      type: object
+      properties:
+        mentor:
+          type: array
+          items:
+            $ref: '#/components/schemas/Mentor'
+        id_traineeship:
+          type: integer
+    Role:
+      type: object
+      properties:
+        role:
+          type: string
+          description: Роль
+        id_employee:
+          type: integer
+          description: ID сотрудника
+        id_intern:
+          type: integer
+          description: ID стажёра
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    Announcement:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название стажировки
+        content:
+          type: string
+          description: Содержание стажировки
+        date_start:
+          type: string
+          description: Дата начала
+        date_end:
+          type: string
+          description: Дата окончания
+        requirement:
+          type: string
+          description: Требования к кандидату
+        term:
+          type: string
+          description: Срок подачи
+        link_testing:
+          type: string
+          description: Ссылка с тестовым заданием
+        relevance:
+          type: boolean
+          description: Актуальность
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    Announcement2:
+      type: object
+      properties:
+        announcement:
+          type: array
+          items:
+            $ref: '#/components/schemas/Announcement'
+    Announcement3:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название стажировки
+        content:
+          type: string
+          description: Содержание стажировки
+        date_start:
+          type: string
+          description: Дата начала
+        date_end:
+          type: string
+          description: Дата окончания
+        requirement:
+          type: string
+          description: Требования к кандидату
+        term:
+          type: string
+          description: Срок подачи
+        link_testing:
+          type: string
+          description: Ссылка с тестовым заданием
+        relevance:
+          type: boolean
+          description: Актуальность
+        delete:
+          type: boolean
+          description: Удалено
+        id_traineeship:
+          type: integer
+          description: ID стажировки
+    Announcement4:
+      type: object
+      properties:
+        announcement:
+          type: array
+          items:
+            $ref: '#/components/schemas/Announcement3'
+    Field:
+      type: object
+      properties:
+        name_field:
+          type: string
+          description: Название поля
+        mandatory:
+          type: boolean
+          description: Обязательность
+        relevance:
+          type: boolean
+          description: Актуальность
+        field_property:
+          type: string
+          description: Свойство поля
+        number:
+          type: integer
+          description: Номер
+        value:
+          type: array
+          items:
+            type: string
+          description: Параметры выбора
+        id_field:
+          type: integer
+          description: ID поля
+    Fields:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field'
+        id_traineeship:
+          type: integer
+    Field2:
+      type: object
+      properties:
+        name_field:
+          type: string
+          description: Название поля
+        mandatory:
+          type: boolean
+          description: Обязательность
+        relevance:
+          type: boolean
+          description: Актуальность
+        field_property:
+          type: string
+          description: Свойство поля
+        number:
+          type: integer
+          description: Номер
+        value:
+          type: array
+          items:
+            type: string
+          description: Параметры выбора
+        delete:
+          type: boolean
+          description: Удалено
+        id_field:
+          type: integer
+          description: ID поля
+    Field3:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            $ref: '#/components/schemas/Field2'
+        id_traineeship:
+          type: integer
